@@ -268,58 +268,6 @@ INSERT INTO titles_formats (title_id, format_id) VALUES
 (21, 1), (21, 4), (22, 1), (22, 4), (23, 1), (23, 4), (24, 1), (24, 4), (25, 1), (25, 4),
 (26, 1), (26, 4), (27, 1), (27, 4), (28, 1), (28, 4), (29, 1), (29, 4), (30, 1), (30, 4);
 
--- Insert 20 New Titles (Stephen King)
-INSERT INTO titles (name, pages, price, pubdate, is_available, ISBN, cover_image_url, average_rating, publisher, description) VALUES
-('It', 1138, 24.99, '1986-09-15', TRUE, '9780451169525', 'It.jpg', 4.5, 'Viking Penguin', 'Stephen King’s terrifying novel about a group of children who face an ancient, shape-shifting evil in their small town of Derry, Maine. A chilling tale of friendship, fear, and the darkness that hides in the shadows.'),
-('Carrie', 199, 14.99, '1974-04-05', TRUE, '9780385086950', 'Carrie.jpg', 4.3, 'Doubleday', 'Carrie White is an outcast high school student who discovers she has telekinetic powers. When she’s humiliated at her senior prom, she unleashes her wrath in a deadly outburst.'),
-('The Stand', 1152, 19.99, '1978-09-01', TRUE, '9780385121682', 'TheStand.jpg', 4.7, 'Doubleday', 'A post-apocalyptic epic where the survivors of a deadly plague must choose sides in a battle between good and evil. King’s haunting vision of a world torn apart by a virus and the struggle for humanity’s future.'),
-('Salem’s Lot', 439, 15.99, '1975-10-01', TRUE, '9780385086952', 'SalemsLot.jpg', 4.4, 'Doubleday', 'A writer returns to the small town of Jerusalem’s Lot, only to find that strange events and deadly forces are at play. A horror novel about vampires and the evil that lurks in the shadows.'),
-('Misery', 368, 17.99, '1987-06-08', TRUE, '9780452264469', 'Misery.jpg', 4.6, 'Viking Penguin', 'A famous author is held captive by a deranged fan after a car accident. As he struggles to escape, he must face the twisted mind of his captor, who has a very personal way of ensuring his compliance.'),
-('The Dark Tower: The Gunslinger', 224, 16.99, '1982-06-10', TRUE, '9780450040186', 'TheDarkTowerGunslinger.jpg', 4.5, 'Viking Penguin', 'The first book in King’s epic fantasy series, following Roland, the last gunslinger, as he journeys across a vast and dangerous world to reach the mysterious Dark Tower.'),
-('Shawshank Redemption', 112, 12.99, '1982-01-01', TRUE, '9780451167477', 'ShawshankRedemption.jpg', 4.9, 'Doubleday', 'A novella about the friendship between two men in prison and their enduring hope. A story of survival, friendship, and redemption.'),
-('The Green Mile', 400, 17.99, '1996-12-01', TRUE, '9780452271731', 'TheGreenMile.jpg', 4.8, 'Signet', 'A supernatural drama set in a 1930s prison, where a condemned inmate with healing powers changes the lives of everyone around him. A tale of kindness, miracles, and the cruelty of death.'),
-('The Shining (Revised)', 512, 19.99, '1995-01-01', TRUE, '9780451180788', 'TheShiningRevised.jpg', 4.6, 'Doubleday', 'A new edition of King’s classic horror novel, following Jack Torrance’s descent into madness while staying at the haunted Overlook Hotel with his family.'),
-('Gerald’s Game', 432, 16.99, '1992-11-10', TRUE, '9780452274374', 'GeraldsGame.jpg', 4.2, 'Viking Penguin', 'A woman is trapped in a remote cabin with her husband after a dangerous sex game goes wrong. Alone and desperate, she must fight to survive and uncover dark secrets from her past.'),
-('Doctor Sleep', 544, 18.99, '2013-09-24', TRUE, '9781451671537', 'DoctorSleep.jpg', 4.3, 'Scribner', 'The sequel to The Shining, following Danny Torrance as an adult, battling alcoholism and confronting a group of psychic vampires who feed on children.'),
-('Under the Dome', 1074, 21.99, '2009-11-10', TRUE, '9781416554980', 'UnderTheDome.jpg', 4.1, 'Scribner', 'A small town is suddenly enclosed under an invisible dome, trapping its residents. As tensions rise and society unravels, a fight for survival and control begins.'),
-('Bag of Bones', 528, 19.99, '1998-09-22', TRUE, '9780452280771', 'BagOfBones.jpg', 4.2, 'Dutton', 'A widowed author returns to his summer home in Maine and uncovers a mystery involving a famous singer’s death, a haunting, and a dark family secret.'),
-('The Institute', 576, 21.99, '2019-09-10', TRUE, '9781982110567', 'TheInstitute.jpg', 4.4, 'Scribner', 'A group of gifted children is kidnapped and taken to a secret facility where they are subjected to experiments. A young boy must fight for his survival and freedom in this chilling novel.'),
-('11/22/63', 849, 25.99, '2011-11-08', TRUE, '9781451627282', '112263.jpg', 4.6, 'Scribner', 'A high school teacher travels back in time in an attempt to prevent the assassination of JFK, only to find that history fights back against any attempts to change it.'),
-('Revival', 400, 18.99, '2014-11-11', TRUE, '9781476753923', 'Revival.jpg', 4.1, 'Scribner', 'A preacher becomes obsessed with the afterlife and conducts dangerous experiments to prove his theories, leading to terrifying consequences.'),
-('The Dark Tower: The Drawing of the Three', 400, 16.99, '1987-05-01', TRUE, '9780450040223', 'TheDarkTowerDrawingOfTheThree.jpg', 4.5, 'Viking Penguin', 'The second book in King’s Dark Tower series, following Roland as he draws three companions from different times and worlds to help him on his quest to find the Dark Tower.'),
-('The Long Walk', 384, 15.99, '1979-06-01', TRUE, '9780451096987', 'TheLongWalk.jpg', 4.3, 'Viking Penguin', 'A dystopian novel about a brutal contest where 100 boys must walk continuously until only one remains. The last walker alive wins, but the cost is unimaginable.'),
-('The Mist', 200, 13.99, '1980-01-01', TRUE, '9780451169532', 'TheMist.jpg', 4.2, 'Doubleday', 'A novella in which a group of people trapped in a supermarket by a strange mist filled with deadly creatures must confront their own fears and the horrors within.'),
-('Pet Sematary', 374, 17.99, '1983-11-14', TRUE, '9780385123037', 'PetSematary.jpg', 4.4, 'Doubleday', 'A family moves to a rural town and discovers a cemetery that has the ability to bring dead animals—and humans—back to life, with horrifying consequences.'),
-('Thinner', 375, 15.99, '1984-01-01', TRUE, '9780451169518', 'Thinner.jpg', 4.2, 'Viking Penguin', 'A man’s life is cursed after an encounter with a gypsy, causing him to rapidly lose weight. He races against time to break the curse before it destroys him completely.');
-
--- Link Titles and Authors
-INSERT INTO titles_authors (title_id, author_id) VALUES
-(31, 1), -- It by Stephen King
-(32, 1), -- Carrie by Stephen King
-(33, 1), -- The Stand by Stephen King
-(34, 1), -- Salem’s Lot by Stephen King
-(35, 1), -- Misery by Stephen King
-(36, 1), -- The Dark Tower: The Gunslinger by Stephen King
-(37, 1), -- Shawshank Redemption by Stephen King
-(38, 1), -- The Green Mile by Stephen King
-(39, 1), -- The Shining (Revised) by Stephen King
-(40, 1), -- Gerald’s Game by Stephen King
-(41, 1), -- Doctor Sleep by Stephen King
-(42, 1), -- Under the Dome by Stephen King
-(43, 1), -- Bag of Bones by Stephen King
-(44, 1), -- The Institute by Stephen King
-(45, 1), -- 11/22/63 by Stephen King
-(46, 1), -- Revival by Stephen King
-(47, 1), -- The Dark Tower: The Drawing of the Three by Stephen King
-(48, 1), -- The Long Walk by Stephen King
-(49, 1), -- The Mist by Stephen King
-(50, 1); -- Pet Sematary by Stephen King
-
--- Link Titles and Genres (All genres are assumed based on the description)
-INSERT INTO titles_genres (title_id, genre_id) VALUES
-(31, 17), (32, 17), (33, 17), (34, 17), (35, 17), (36, 17), (37, 17), 
-(38, 17), (39, 17), (40, 17), (41, 17), (42, 17), (43, 17), (44, 17), 
-(45, 17), (46, 17), (47, 17), (48, 17), (49, 17), (50, 17);  -- Assuming Horror genre (ID 17)
 
 
 
