@@ -4,13 +4,6 @@ import '../screens/login_page.dart';
 import '../screens/signup_page.dart';
 
 class LandingController {
-  Future<void> checkPreviousSession() async {
-    // Here you could:
-    // - Check for stored credentials
-    // - Verify token validity
-    // - Auto-login if credentials exist
-    // - Check for first time app launch
-  }
 
   void navigateToLogin(BuildContext context) {
     Navigator.push(

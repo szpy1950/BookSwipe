@@ -17,9 +17,12 @@ class _LandingPageState extends State<LandingPage> {
   @override
   void initState() {
     super.initState();
+
+    // Check for existing valid auth token when app starts
     Future.microtask(() => _checkAuth());
   }
 
+  // check if user is already authenticated
   Future<void> _checkAuth() async {
     try {
       final isLoggedIn = await _authController.checkAuth(context);
@@ -33,6 +36,7 @@ class _LandingPageState extends State<LandingPage> {
     }
   }
 
+  // Navigates to the login page when user taps login button
   void _navigateToLogin(BuildContext context) {
     Navigator.push(
       context,
@@ -40,6 +44,7 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 
+  // Navigates to the signup page when user taps signup button
   void _navigateToSignup(BuildContext context) {
     Navigator.push(
       context,

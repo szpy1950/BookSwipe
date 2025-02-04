@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+// Sign up screen with username/password form and validation
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
@@ -9,12 +10,14 @@ class SignUpPage extends StatefulWidget {
   State<SignUpPage> createState() => _SignUpPageState();
 }
 
+// Manages signup form state and handles user registration
 class _SignUpPageState extends State<SignUpPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   bool _isLoading = false;
 
+  // Handles form submission, validates input, makes API call to register user
   Future<void> _handleSignUp() async {
     // Basic validation
     if (_passwordController.text != _confirmPasswordController.text) {
@@ -64,12 +67,14 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
+  // Shows error message in a snackbar at bottom of screen
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
   }
 
+  // Cleanup text controllers when widget is disposed
   @override
   void dispose() {
     _usernameController.dispose();
@@ -78,6 +83,7 @@ class _SignUpPageState extends State<SignUpPage> {
     super.dispose();
   }
 
+  // Builds signup form with username, password, confirm password fields and submit button
   @override
   Widget build(BuildContext context) {
     return Scaffold(

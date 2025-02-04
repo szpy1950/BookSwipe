@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../controllers/profile_controller.dart';
 
+// Profile page shows user info, liked books and reading preferences
 class ProfilePage extends StatefulWidget {
   final Map<String, dynamic> userData;
 
@@ -13,6 +14,7 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
+// State for profile page handling preferences and liked books
 class _ProfilePageState extends State<ProfilePage> {
   final _profileController = ProfileController();
   bool _isLoading = true;
@@ -37,12 +39,14 @@ class _ProfilePageState extends State<ProfilePage> {
     'Authors': {}
   };
 
+  // Loads user preferences, available preferences and liked books on page load
   @override
   void initState() {
     super.initState();
     _loadAllData();
   }
 
+  // Fetches and updates all user data from the server
   Future<void> _loadAllData() async {
     setState(() {
       _isLoading = true;
@@ -71,6 +75,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  // Updates user preference when a filter chip is toggled
   Future<void> _handlePreferenceChange(
       String category,
       String option,
@@ -106,6 +111,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  // Builds user avatar and username section at top of profile
   Widget _buildUserHeader() {
     return Container(
       width: double.infinity,
@@ -139,6 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  // Builds expandable section showing user's liked books
   Widget _buildLikedBooksSection() {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -206,6 +213,9 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  // Builds profile page with: loading spinner, error handling with retry button,
+  // scrollable content containing user header with avatar, expandable liked books list,
+  // and preference categories (Book Length, Formats, Genres, Languages, Authors) with filter chips
   Widget _buildPreferencesSection() {
     // Define the order of preferences
     final preferenceOrder = [
@@ -273,6 +283,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  // Builds full profile page layout with loading and error states
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
