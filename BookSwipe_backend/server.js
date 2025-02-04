@@ -51,7 +51,7 @@ app.get("/", (req, res) => {
     res.json({ message: "Server is running" });
 });
 
-
+// Login route
 app.post("/login", async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -106,6 +106,7 @@ app.post("/login", async (req, res) => {
     }
 });
 
+// Signup route
 app.post("/signup", async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -146,6 +147,7 @@ app.post("/signup", async (req, res) => {
     }
 });
 
+// Get recommended books through search algorithm
 app.get("/recommended-books", authenticateToken, async (req, res) => {
     try {
         const userId = req.userId;
@@ -296,7 +298,7 @@ app.get("/recommended-books", authenticateToken, async (req, res) => {
     }
 });
 
-
+// Route to verify JWT token
 app.post("/verify-token", async (req, res) => {
     try {
         const { token } = req.body;
@@ -326,6 +328,7 @@ app.post("/verify-token", async (req, res) => {
     }
 });
 
+// Route to fetch books
 app.get("/books", async (req, res) => {
     try {
         const query = `
@@ -429,6 +432,7 @@ app.get("/user/:userId/preferences", authenticateToken, async (req, res) => {
     }
 });
 
+// Route to select available preferences
 app.get("/available-preferences", async (req, res) => {
     try {
         console.log("Fetching available preferences...");
@@ -596,7 +600,6 @@ app.post("/user/:userId/dislike-book", authenticateToken, async (req, res) => {
     }
 });
 
-
 app.get("/user/:userId/liked-books", authenticateToken, async (req, res) => {
     try {
         const userId = req.params.userId;
@@ -640,7 +643,7 @@ app.get("/user/:userId/liked-books", authenticateToken, async (req, res) => {
     }
 });
 
-
+// Route to record user likes 
 app.post("/user/:userId/like-book", authenticateToken, async (req, res) => {
     try {
         const userId = req.userId;  // Get from token
@@ -748,6 +751,7 @@ app.get("/user/:userId/disliked-books", authenticateToken, async (req, res) => {
 });
 
 // Utility Functions
+// Function to get password from said user
 async function getPassword(username) {
     try {
         const query = 'SELECT password_hash FROM users WHERE username = $1';
@@ -760,6 +764,7 @@ async function getPassword(username) {
     }
 }
 
+// Function to reset preferences
 async function resetPreferences(userId, genres, languages, lengths) {
     try {
         await db.query('BEGIN');
