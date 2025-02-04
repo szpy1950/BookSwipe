@@ -1,142 +1,211 @@
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+// lib/services/api_service.dart
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import '../models/book.dart';
+import 'auth_service.dart';
+import 'token_storage.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class ApiService {
+  static const String baseUrl = 'http://192.168.1.102:8080';
+  final _storage = TokenStorage();
 
-  @override
-  State<SignUpPage> createState() => _SignUpPageState();
-}
-
-class _SignUpPageState extends State<SignUpPage> {
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  bool _isLoading = false;
-
-  Future<void> _handleSignUp() async {
-    // Basic validation
-    if (_passwordController.text != _confirmPasswordController.text) {
-      _showError('Passwords do not match');
-      return;
+  static String getImageUrl(String? imageUrl) {
+    if (imageUrl == null ||
+        imageUrl.isEmpty ||
+        !RegExp(r'^[a-zA-Z0-9]+\.jpg$').hasMatch(imageUrl)) {
+      return '$baseUrl/images/placeholder.jpg';
     }
+    return '$baseUrl/images/$imageUrl';
+  }
 
-    if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
-      _showError('Please fill in all fields');
-      return;
+  Future<Map<String, String>> _getAuthHeaders() async {
+    final token = await _storage.getToken();
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${token ?? ''}',
+    };
+  }
+
+  Future<Map<String, dynamic>> getUserPreferences(int userId) async {
+    final headers = await _getAuthHeaders();
+    final response = await http.get(
+      Uri.parse('$baseUrl/user/$userId/preferences'),
+      headers: headers,
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to fetch user preferences');
     }
+  }
 
-    setState(() {
-      _isLoading = true;
-    });
+  Future<Map<String, dynamic>> updateUserPreferences({
+    required int userId,
+    required Map<String, List<String>> preferences,
+  }) async {
+    final headers = await _getAuthHeaders();
+    final response = await http.post(
+      Uri.parse('$baseUrl/user/$userId/preferences'),
+      headers: headers,
+      body: json.encode({
+        'preferences': preferences,
+      }),
+    );
 
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to update preferences');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getUserLikedBooks(int userId) async {
     try {
-      final response = await http.post(
-        Uri.parse('http://192.168.1.102:8080/signup'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'username': _usernameController.text,
-          'password': _passwordController.text,
-        }),
+      final headers = await _getAuthHeaders();
+      final response = await http.get(
+        Uri.parse('$baseUrl/user/$userId/liked-books'),
+        headers: headers,
       );
 
-      final data = json.decode(response.body);
-
-      if (response.statusCode == 200 && data['success'] == true) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Sign up successful! Please login.')),
-          );
-          Navigator.pop(context); // Go back to login page
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] && data['books'] != null) {
+          return List<Map<String, dynamic>>.from(data['books']);
         }
+        return [];
       } else {
-        _showError(data['message'] ?? 'Sign up failed');
+        throw Exception('Failed to fetch liked books');
       }
     } catch (e) {
-      _showError('Connection error: $e');
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      print('Error fetching liked books: $e');
+      throw Exception('Failed to fetch liked books: $e');
     }
   }
 
-  void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
+  // Auth endpoints
+  Future<Map<String, dynamic>> login(String username, String password) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'username': username,
+        'password': password,
+      }),
     );
+
+    return json.decode(response.body);
   }
 
-  @override
-  void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    super.dispose();
+  Future<Map<String, dynamic>> verifyToken(String token) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/verify-token'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({'token': token}),
+    );
+
+    return json.decode(response.body);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Sign Up'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(
-                labelText: 'Username',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _passwordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _confirmPasswordController,
-              obscureText: true,
-              decoration: InputDecoration(
-                labelText: 'Confirm Password',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            const SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: _isLoading ? null : _handleSignUp,
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-              ),
-              child: _isLoading
-                  ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(strokeWidth: 2),
-              )
-                  : const Text('SIGN UP'),
-            ),
-          ],
-        ),
-      ),
+  Future<Map<String, dynamic>> signup(String username, String password) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/signup'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'username': username,
+        'password': password,
+      }),
     );
+
+    return json.decode(response.body);
+  }
+
+  // Book endpoints
+  Future<List<Book>> fetchBooks() async {
+    final response = await http.get(Uri.parse('$baseUrl/books'));
+    final data = json.decode(response.body);
+
+    if (data['success']) {
+      return (data['books'] as List)
+          .map((bookJson) => Book.fromJson(bookJson))
+          .toList();
+    } else {
+      throw Exception('Failed to load books');
+    }
+  }
+
+  Future<Map<String, dynamic>> getAvailablePreferences() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/available-preferences'),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to fetch available preferences');
+    }
+  }
+
+  Future<void> likeBook(int bookId, int userId) async {
+    final headers = await _getAuthHeaders();
+    final response = await http.post(
+      Uri.parse('$baseUrl/user/$userId/like-book'),  // Replace 1 with actual user ID
+      headers: headers,
+      body: json.encode({
+        'bookId': bookId,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      final data = json.decode(response.body);
+      throw Exception(data['message'] ?? 'Failed to like book');
+    }
+  }
+  Future<void> dislikeBook(int bookId, int userId) async {
+    final headers = await _getAuthHeaders();
+    final response = await http.post(
+      Uri.parse('$baseUrl/user/$userId/dislike-book'),
+      headers: headers,
+      body: json.encode({
+        'bookId': bookId,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      final data = json.decode(response.body);
+      throw Exception(data['message'] ?? 'Failed to dislike book');
+    }
+  }
+
+  Future<List<Book>> fetchRecommendedBooks() async {
+    try {
+      final headers = await _getAuthHeaders();
+      print('Auth headers: $headers'); // DEBUGGING
+      final response = await http.get(
+        Uri.parse('$baseUrl/recommended-books'),
+        headers: headers,
+      );
+
+      print('Response status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        if (data['success']) {
+          return (data['books'] as List)
+              .map((bookJson) => Book.fromJson(bookJson))
+              .toList();
+        } else {
+          throw Exception('Server returned success: false');
+        }
+      } else {
+        throw Exception('Failed to load recommended books. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Detailed error fetching recommended books: $e');
+      rethrow;
+    }
   }
 }
