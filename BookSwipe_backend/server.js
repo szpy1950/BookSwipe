@@ -43,6 +43,8 @@ const authenticateToken = (req, res, next) => {
     }
 };
 
+app.use('/images', express.static('images'));
+
 
 // Routes
 app.get("/", (req, res) => {
@@ -226,7 +228,9 @@ app.get("/recommended-books", authenticateToken, async (req, res) => {
             CASE
             WHEN $5::text[] @> ARRAY['short']::text[] AND t.pages < 200 THEN 0.20
             WHEN $5::text[] @> ARRAY['medium']::text[] AND t.pages BETWEEN 200 AND 400 THEN 0.20
-            WHEN $5::text[] @> ARRAY['long']::text[] AND t.pages > 400 THEN 0.20
+            WHEN $5::text[] @> ARRAY['long']::text[] AND t.pages BETWEEN 401 AND 500 THEN 0.20
+            WHEN $5::text[] @> ARRAY['very_long']::text[] AND t.pages BETWEEN 501 AND 800 THEN 0.20
+            WHEN $5::text[] @> ARRAY['humongous']::text[] AND t.pages > 800 THEN 0.20
             ELSE 0
             END as match_score
 
@@ -241,6 +245,11 @@ app.get("/recommended-books", authenticateToken, async (req, res) => {
             AND t.id NOT IN (
                 SELECT title_id
                 FROM liked_titles
+                WHERE user_id = $1
+            )
+            AND t.id NOT IN (
+                SELECT title_id
+                FROM disliked_titles
                 WHERE user_id = $1
             )
             GROUP BY t.id, t.name, t.cover_image_url, t.average_rating, t.pages,
@@ -524,6 +533,69 @@ app.post("/user/:userId/preferences", authenticateToken, async (req, res) => {
     }
 });
 
+// Modify the existing dislike route to add more logging
+app.post("/user/:userId/dislike-book", authenticateToken, async (req, res) => {
+    try {
+        const userId = req.userId;
+        const { bookId } = req.body;
+
+        console.log(`Dislike book request - UserID: ${userId}, BookID: ${bookId}`);
+
+        // Validate input
+        if (!bookId) {
+            return res.status(400).json({
+                success: false,
+                message: "BookId is required"
+            });
+        }
+
+        // Check if book exists
+        const bookCheck = await db.query(
+            'SELECT id FROM titles WHERE id = $1',
+            [bookId]
+        );
+
+        if (bookCheck.rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Book not found"
+            });
+        }
+
+        // Check if already disliked
+        const existingDislike = await db.query(
+            'SELECT * FROM disliked_titles WHERE user_id = $1 AND title_id = $2',
+            [userId, bookId]
+        );
+
+        if (existingDislike.rows.length > 0) {
+            return res.json({
+                success: true,
+                message: "Book was already disliked"
+            });
+        }
+
+        // Insert new dislike
+        await db.query(
+            'INSERT INTO disliked_titles (user_id, title_id) VALUES ($1, $2)',
+                       [userId, bookId]
+        );
+
+        console.log(`Successfully disliked book ${bookId} for user ${userId}`);
+
+        res.json({
+            success: true,
+            message: "Book disliked successfully"
+        });
+    } catch (err) {
+        console.error("Error disliking book:", err);
+        res.status(500).json({
+            success: false,
+            message: "Error disliking book: " + err.message
+        });
+    }
+});
+
 
 app.get("/user/:userId/liked-books", authenticateToken, async (req, res) => {
     try {
@@ -631,7 +703,49 @@ app.post("/user/:userId/like-book", authenticateToken, async (req, res) => {
     }
 });
 
+// Add this new GET route for disliked books
+app.get("/user/:userId/disliked-books", authenticateToken, async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        console.log(`Fetching disliked books for user: ${userId}`);
 
+        // First check if user has any disliked books
+        const checkDislikes = await db.query('SELECT COUNT(*) FROM disliked_titles WHERE user_id = $1', [userId]);
+        console.log(`Number of disliked books found: ${checkDislikes.rows[0].count}`);
+
+        const query = `
+        SELECT
+        t.id,
+        t.name as title,
+        STRING_AGG(DISTINCT CONCAT(a.au_fname, ' ', a.au_lname), ', ') as author,
+        t.cover_image_url,
+        t.average_rating,
+        ARRAY_TO_JSON(ARRAY_AGG(DISTINCT g.name)) as genres
+        FROM disliked_titles dt
+        JOIN titles t ON dt.title_id = t.id
+        LEFT JOIN titles_authors ta ON t.id = ta.title_id
+        LEFT JOIN authors a ON ta.author_id = a.id
+        LEFT JOIN titles_genres tg ON t.id = tg.title_id
+        LEFT JOIN genres g ON tg.genre_id = g.id
+        WHERE dt.user_id = $1
+        GROUP BY t.id
+        `;
+
+        const result = await db.query(query, [userId]);
+        console.log(`Retrieved ${result.rows.length} disliked books with details`);
+
+        res.json({
+            success: true,
+            books: result.rows
+        });
+    } catch (err) {
+        console.error("Error fetching disliked books:", err);
+        res.status(500).json({
+            success: false,
+            message: "Error fetching disliked books"
+        });
+    }
+});
 
 // Utility Functions
 async function getPassword(username) {
@@ -694,8 +808,6 @@ async function resetPreferences(userId, genres, languages, lengths) {
         throw err;
     }
 }
-
-
 
 // Server startup
 const PORT = 8080;
