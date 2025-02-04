@@ -1,4 +1,5 @@
 # BookSwipe - A Book Discovery App
+
 A Flutter application that helps users discover books through a Tinder-like swiping interface. Users can create accounts, swipe through books, and save their preferences.
 
 ## Setup Requirements
@@ -13,49 +14,68 @@ A Flutter application that helps users discover books through a Tinder-like swip
 ```bash
 # Create Flutter project in current directory
 flutter create .
-
 # Get dependencies
 flutter pub get
 ```
 
 ### Database Setup
-1. Install PostgreSQL
-2. Create database named "BinderDBTest"
-3. Run the provided SQL scripts to create tables and insert sample data
+```bash
+# Connect and create database
+psql -U postgres
+CREATE DATABASE "BinderDBTest";
+\q
+
+# Set up database structure and sample data
+psql -U postgres -d BinderDBTest -f BinderDB.sql
+psql -U postgres -d BinderDBTest -f BookInsertion.sql
+
+# Optional: Reset database if needed
+psql -U postgres -f reset_db.sql
+```
 
 ### Server Setup
 ```bash
 # Install dependencies
 npm install express pg cors jsonwebtoken
-
 # Start the server
 node server.js
 ```
 
 ### Flutter App Setup
-```bash
-# Install dependencies
-flutter pub get
-```
-
-**Important**: Add Internet permission to `android/app/src/main/AndroidManifest.xml` right after the opening `<manifest>` tag:
-```xml
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-permission android:name="android.permission.INTERNET" />
-    <application
-        ...
-```
-
-Update the server IP address in `lib/services/api_service.dart` to match your local network.
+1. Install dependencies:
+   ```bash
+   flutter pub get
+   ```
+2. Add Internet permission to `android/app/src/main/AndroidManifest.xml`:
+   ```xml
+   <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+       <uses-permission android:name="android.permission.INTERNET" />
+       <application
+           ...
+   ```
+3. Update server configuration in `lib/services/api_service.dart` to match your local network IP
 
 ## Project Structure
 ```
 lib/
 ├── controllers/    # Business logic
+│   ├── auth_controller.dart
+│   ├── book_controller.dart
+│   └── preference_controller.dart
 ├── models/         # Data models
+│   ├── book.dart
+│   ├── user.dart
+│   └── preference.dart
 ├── screens/        # UI screens
+│   ├── login_screen.dart
+│   ├── home_screen.dart
+│   └── detail_screen.dart
 ├── services/       # API and auth services
+│   ├── api_service.dart
+│   └── auth_service.dart
 └── widgets/        # Reusable widgets
+    ├── book_card.dart
+    └── swipe_card.dart
 ```
 
 ## Features
@@ -65,6 +85,9 @@ lib/
 - Like/Dislike functionality
 - User preference management
 - Reading history tracking
+- Offline mode support
+- Dark/Light theme toggle
+- Reading list management
 
 ## Architecture
 The app follows MVC (Model-View-Controller) architecture:
@@ -73,28 +96,35 @@ The app follows MVC (Model-View-Controller) architecture:
 - Controllers: Business logic and state management
 
 ## API Endpoints
-- POST /login - User authentication
-- POST /signup - User registration
-- GET /books - Fetch book recommendations
-- POST /user/:id/preferences - Update user preferences
+### Authentication
+- POST /api/login - User authentication
+- POST /api/signup - User registration
+- POST /api/logout - User logout
+- GET /api/user/verify - Token verification
 
-## Testing
-```bash
-# Run unit tests
-flutter test
+### Books
+- GET /api/books - Fetch book recommendations
+- GET /api/books/:id - Get book details
+- GET /api/books/recommended - Get personalized recommendations
 
-# Run integration tests
-flutter test integration_test
-```
+### User Preferences
+- GET /api/user/:id/preferences - Get user preferences
+- POST /api/user/:id/preferences - Update user preferences
+- DELETE /api/user/:id/preferences - Reset preferences
 
 ## Troubleshooting
 Common issues and solutions:
-1. Network Connection Issues
-   - Verify server IP address in api_service.dart
-   - Check network permissions
-2. Database Connection
-   - Verify PostgreSQL connection string
-   - Check database credentials
+
+### Network Connection Issues
+- Verify server IP address in api_service.dart
+- Check network permissions
+- Ensure firewall allows Flutter app connections
+
+### Database Connection
+- Verify PostgreSQL connection string
+- Check database credentials
+- Ensure database service is running
+- Verify port availability (default: 5432)
 
 ## Contributing
 1. Fork the repository
@@ -105,4 +135,4 @@ Common issues and solutions:
 This project is licensed under the MIT License - see the LICENSE file for details
 
 ## Screenshots
-[Add screenshots/GIF demo of the app]
+[Add screenshots/GIF demo of the app here]
