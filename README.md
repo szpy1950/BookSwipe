@@ -1,15 +1,23 @@
-# BookSwipe - A Book Discovery App
+Here's the formatted version ready to copy-paste into your README.md file:
 
+# BookSwipe - A Book Discovery App
 A Flutter application that helps users discover books through a Tinder-like swiping interface. Users can create accounts, swipe through books, and save their preferences.
 
 ## Setup Requirements
 
 ### Prerequisites
-```
-- Flutter
-- Node.js
-- PostgreSQL
-- npm
+- Flutter (v3.0.0 or higher)
+- Node.js (v14.0.0 or higher)
+- PostgreSQL (v12.0 or higher)
+- npm (v6.0.0 or higher)
+
+### Project Creation
+```bash
+# Create Flutter project in current directory
+flutter create .
+
+# Get dependencies
+flutter pub get
 ```
 
 ### Database Setup
@@ -20,14 +28,10 @@ A Flutter application that helps users discover books through a Tinder-like swip
 ### Server Setup
 ```bash
 # Install dependencies
-npm install express pg cors
+npm install express pg cors jsonwebtoken
 
 # Start the server
 node server.js
-
-
-# Token
-npm install jsonwebtoken
 ```
 
 ### Flutter App Setup
@@ -44,29 +48,63 @@ flutter pub get
         ...
 ```
 
-Update the server IP address in the Flutter app to match your local network.
+Update the server IP address in `lib/services/api_service.dart` to match your local network.
 
-### Running the App
-```bash
-flutter run
+## Project Structure
+```
+lib/
+├── controllers/    # Business logic
+├── models/         # Data models
+├── screens/        # UI screens
+├── services/       # API and auth services
+└── widgets/        # Reusable widgets
 ```
 
 ## Features
 - User authentication (login/signup)
-- Book swiping interface
-- Book details display (title, author, rating, etc.)
+- Book swiping interface with animations
+- Detailed book information display
 - Like/Dislike functionality
+- User preference management
+- Reading history tracking
 
-## Technical Stack
-```
-- Frontend: Flutter
-- Backend: Node.js with Express
-- Database: PostgreSQL
+## Architecture
+The app follows MVC (Model-View-Controller) architecture:
+- Models: Book and user data structures
+- Views: Flutter widgets and screens
+- Controllers: Business logic and state management
+
+## API Endpoints
+- POST /login - User authentication
+- POST /signup - User registration
+- GET /books - Fetch book recommendations
+- POST /user/:id/preferences - Update user preferences
+
+## Testing
+```bash
+# Run unit tests
+flutter test
+
+# Run integration tests
+flutter test integration_test
 ```
 
-## Note
-This is a demo application with sample book data. For production use, you would need to:
-- Add proper security measures
-- Include real book cover images
-- Implement proper error handling
-- Add more comprehensive user features
+## Troubleshooting
+Common issues and solutions:
+1. Network Connection Issues
+   - Verify server IP address in api_service.dart
+   - Check network permissions
+2. Database Connection
+   - Verify PostgreSQL connection string
+   - Check database credentials
+
+## Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Submit a pull request
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details
+
+## Screenshots
+[Add screenshots/GIF demo of the app]
