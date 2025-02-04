@@ -207,6 +207,7 @@ app.get("/recommended-books", authenticateToken, async (req, res) => {
             t.name as title,
             t.cover_image_url,
             t.average_rating,
+            t.description,
             STRING_AGG(DISTINCT (a.au_fname || ' ' || a.au_lname), ', ') AS author,
             array_agg(DISTINCT g.name)::text[] as genres,
             array_agg(DISTINCT l.name)::text[] as languages,
@@ -278,6 +279,7 @@ app.get("/recommended-books", authenticateToken, async (req, res) => {
         isbn,
         is_available,
         price,
+        description,
         match_score
         FROM book_scores
         WHERE match_score > 0
@@ -350,6 +352,7 @@ app.get("/books", async (req, res) => {
         t.cover_image_url,
         t.average_rating,
         t.publisher,
+        t.description,
         STRING_AGG(DISTINCT a.au_fname || ' ' || a.au_lname, ', ') AS author,
         ARRAY_TO_JSON(ARRAY_AGG(DISTINCT g.name)) as genres,
         ARRAY_TO_JSON(ARRAY_AGG(DISTINCT l.name)) as languages,
