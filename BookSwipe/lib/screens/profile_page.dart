@@ -21,19 +21,19 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // Available preferences (all possible options)
   Map<String, List<String>> _availablePreferences = {
-    'Genres': [],
-    'Languages': [],
     'Book Length': [],
     'Formats': [],
+    'Genres': [],
+    'Languages': [],
     'Authors': []
   };
 
   // Selected preferences (which ones are checked)
   Map<String, Set<String>> _selectedPreferences = {
-    'Genres': {},
-    'Languages': {},
     'Book Length': {},
     'Formats': {},
+    'Genres': {},
+    'Languages': {},
     'Authors': {}
   };
 
@@ -71,6 +71,41 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
+  Future<void> _handlePreferenceChange(
+      String category,
+      String option,
+      bool selected,
+      ) async {
+    final previousSelections = Set<String>.from(_selectedPreferences[category] ?? {});
+
+    setState(() {
+      if (selected) {
+        _selectedPreferences[category] ??= {};
+        _selectedPreferences[category]!.add(option);
+      } else {
+        _selectedPreferences[category]?.remove(option);
+      }
+    });
+
+    try {
+      final updatedPrefs = _selectedPreferences.map(
+            (key, value) => MapEntry(key, value.toList()),
+      );
+
+      await _profileController.updatePreferences(
+        userId: widget.userData['id'],
+        preferences: updatedPrefs,
+      );
+    } catch (e) {
+      setState(() => _selectedPreferences[category] = previousSelections);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error updating preferences: $e')),
+        );
+      }
+    }
+  }
+
   Widget _buildUserHeader() {
     return Container(
       width: double.infinity,
@@ -105,93 +140,82 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildLikedBooksSection() {
-    if (_likedBooks.isEmpty) {
-      return Card(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'Liked Books',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 16),
-              Center(child: Text('No liked books yet')),
-            ],
-          ),
-        ),
-      );
-    }
-
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ExpansionTile(
+        title: const Text(
+          'Liked Books',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        initiallyExpanded: false,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(
-              'Liked Books',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _likedBooks.length,
-            itemBuilder: (context, index) {
-              final book = _likedBooks[index];
-              return ListTile(
-                leading: book['cover_image_url'] != null
-                    ? Image.network(
-                  book['cover_image_url'],
-                  width: 50,
-                  height: 75,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => const Icon(Icons.book),
-                )
-                    : const Icon(Icons.book),
-                title: Text(book['title'] ?? 'Unknown Title'),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(book['author'] ?? 'Unknown Author'),
-                    if (book['genres'] != null)
-                      Text(
-                        List<String>.from(book['genres']).join(', '),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
+          if (_likedBooks.isEmpty)
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Center(child: Text('No liked books yet')),
+            )
+          else
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _likedBooks.length,
+              itemBuilder: (context, index) {
+                final book = _likedBooks[index];
+                return ListTile(
+                  leading: book['cover_image_url'] != null
+                      ? Image.network(
+                    book['cover_image_url'],
+                    width: 50,
+                    height: 75,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => const Icon(Icons.book),
+                  )
+                      : const Icon(Icons.book),
+                  title: Text(book['title'] ?? 'Unknown Title'),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(book['author'] ?? 'Unknown Author'),
+                      if (book['genres'] != null)
+                        Text(
+                          List<String>.from(book['genres']).join(', '),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
                         ),
-                      ),
-                  ],
-                ),
-                trailing: book['average_rating'] != null
-                    ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.star, color: Colors.amber, size: 16),
-                    Text(book['average_rating'].toString()),
-                  ],
-                )
-                    : null,
-              );
-            },
-          ),
+                    ],
+                  ),
+                  trailing: book['average_rating'] != null
+                      ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                      Text(book['average_rating'].toString()),
+                    ],
+                  )
+                      : null,
+                );
+              },
+            ),
         ],
       ),
     );
   }
 
   Widget _buildPreferencesSection() {
+    // Define the order of preferences
+    final preferenceOrder = [
+      'Book Length',
+      'Formats',
+      'Genres',
+      'Languages',
+      'Authors'
+    ];
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
@@ -207,28 +231,26 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ),
-          ..._availablePreferences.entries.map((entry) {
-            final categoryTitle = entry.key;
-            final options = entry.value;
+          ...preferenceOrder.map((categoryTitle) {
+            final options = _availablePreferences[categoryTitle] ?? [];
 
             if (options.isEmpty) {
               return const SizedBox.shrink();
             }
 
-            return Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    categoryTitle,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Wrap(
+            return ExpansionTile(
+              title: Text(
+                categoryTitle,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              initiallyExpanded: false,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Wrap(
                     spacing: 8,
                     runSpacing: 8,
                     children: options.map((option) => FilterChip(
@@ -242,48 +264,13 @@ class _ProfilePageState extends State<ProfilePage> {
                       selectedColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
                     )).toList(),
                   ),
-                ],
-              ),
+                ),
+              ],
             );
           }).toList(),
         ],
       ),
     );
-  }
-
-  Future<void> _handlePreferenceChange(
-      String category,
-      String option,
-      bool selected,
-      ) async {
-    final previousSelections = Set<String>.from(_selectedPreferences[category] ?? {});
-
-    setState(() {
-      if (selected) {
-        _selectedPreferences[category] ??= {};
-        _selectedPreferences[category]!.add(option);
-      } else {
-        _selectedPreferences[category]?.remove(option);
-      }
-    });
-
-    try {
-      final updatedPrefs = _selectedPreferences.map(
-            (key, value) => MapEntry(key, value.toList()),
-      );
-
-      await _profileController.updatePreferences(
-        userId: widget.userData['id'],
-        preferences: updatedPrefs,
-      );
-    } catch (e) {
-      setState(() => _selectedPreferences[category] = previousSelections);
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error updating preferences: $e')),
-        );
-      }
-    }
   }
 
   @override
