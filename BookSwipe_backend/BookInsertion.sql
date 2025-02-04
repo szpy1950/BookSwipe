@@ -33,15 +33,15 @@ INSERT INTO authors (au_fname, au_lname) VALUES
 
 -- Insert New Titles
 INSERT INTO titles (name, pages, price, pubdate, is_available, ISBN, cover_image_url, average_rating, publisher, description) VALUES
-('The Shining', 447, 18.99, '1977-01-28', TRUE, '9780385121675', '91U7HNa2NQL.jpg', 4.2, 'Doubleday', 'A psychological horror novel that follows Jack Torrance, an aspiring writer and recovering alcoholic, who accepts a winter caretaking job at the isolated Overlook Hotel, only to slowly descend into madness as supernatural forces take control.'),
-('Murder on the Orient Express', 256, 14.99, '1934-01-01', TRUE, '9780007119318', '71ihbKf67RL.jpg', 4.5, 'Collins Crime Club', 'Detective Hercule Poirot solves a murder mystery aboard the luxurious train, the Orient Express, where every passenger is a suspect. A brilliant, intricately plotted whodunit by Agatha Christie.'),
-('One Hundred Years of Solitude', 417, 16.99, '1967-05-30', TRUE, '9780060883287', '81dy4cfPGuL.jpg', 4.7, 'Harper', 'Gabriel García Márquez’s masterpiece, blending magical realism with history, chronicles the rise and fall of the Buendía family in the fictional town of Macondo over the course of a century.'),
-('The Handmaid''s Tale', 311, 15.99, '1985-06-14', TRUE, '9780385490818', '61su39k8NUL.jpg', 4.4, 'McClelland & Stewart', 'In a dystopian future where a totalitarian regime controls fertility, Offred, a handmaid, navigates her oppressive life as she is forced to bear children for the elite. A powerful exploration of gender, power, and freedom.'),
-('American Gods', 465, 19.99, '2001-06-19', TRUE, '9780380973651', '81r7fuk0rKL.jpg', 4.3, 'William Morrow', 'A gripping blend of mythology and Americana, Neil Gaiman’s novel follows Shadow Moon, a man caught in a war between ancient gods and modern-day deities. Themes of faith, identity, and the changing landscape of America.'),
-('Mrs. Dalloway', 176, 12.99, '1925-05-14', TRUE, '9780156628709', '91OZZN8uEOL.jpg', 4.0, 'Hogarth Press', 'Virginia Woolf’s stream-of-consciousness novel explores a day in the life of Clarissa Dalloway as she prepares for a party, weaving together themes of mental illness, post-war England, and human connection.'),
+('The Shining', 447, 18.99, '1977-01-28', TRUE, '9780385121675', 'shining.jpg', 4.2, 'Doubleday', 'A psychological horror novel that follows Jack Torrance, an aspiring writer and recovering alcoholic, who accepts a winter caretaking job at the isolated Overlook Hotel, only to slowly descend into madness as supernatural forces take control.'),
+('Murder on the Orient Express', 256, 14.99, '1934-01-01', TRUE, '9780007119318', 'murder.jpg', 4.5, 'Collins Crime Club', 'Detective Hercule Poirot solves a murder mystery aboard the luxurious train, the Orient Express, where every passenger is a suspect. A brilliant, intricately plotted whodunit by Agatha Christie.'),
+('One Hundred Years of Solitude', 417, 16.99, '1967-05-30', TRUE, '9780060883287', 'solitude.jpg', 4.7, 'Harper', 'Gabriel García Márquez’s masterpiece, blending magical realism with history, chronicles the rise and fall of the Buendía family in the fictional town of Macondo over the course of a century.'),
+('The Handmaid''s Tale', 311, 15.99, '1985-06-14', TRUE, '9780385490818', 'handmaid.jpg', 4.4, 'McClelland & Stewart', 'In a dystopian future where a totalitarian regime controls fertility, Offred, a handmaid, navigates her oppressive life as she is forced to bear children for the elite. A powerful exploration of gender, power, and freedom.'),
+('American Gods', 465, 19.99, '2001-06-19', TRUE, '9780380973651', 'AmericanGods.jpg', 4.3, 'William Morrow', 'A gripping blend of mythology and Americana, Neil Gaiman’s novel follows Shadow Moon, a man caught in a war between ancient gods and modern-day deities. Themes of faith, identity, and the changing landscape of America.'),
+('Mrs. Dalloway', 176, 12.99, '1925-05-14', TRUE, '9780156628709', 'Dalloway.jpg', 4.0, 'Hogarth Press', 'Virginia Woolf’s stream-of-consciousness novel explores a day in the life of Clarissa Dalloway as she prepares for a party, weaving together themes of mental illness, post-war England, and human connection.'),
 ('Norwegian Wood', 296, 15.99, '1987-08-04', TRUE, '9780375704024', 'NorwegianWood.jpg', 4.1, 'Kodansha', 'A poignant coming-of-age novel by Haruki Murakami, focusing on Toru Watanabe as he navigates love, loss, and identity during his student years in Tokyo. A story of emotional depth and transformation.'),
 ('The Old Man and the Sea', 127, 13.99, '1952-09-01', TRUE, '9780684801223', 'TheOldManAndTheSea.jpg', 4.4, 'Charles Scribner''s Sons', 'Hemingway’s short, powerful novel follows Santiago, an old Cuban fisherman, in his epic struggle to catch a giant marlin. A timeless story of human endurance, struggle, and triumph over adversity.'),
-('Beloved', 324, 16.99, '1987-09-02', TRUE, '9781400033416', 'Beloved', 4.3, 'Alfred A. Knopf', 'Toni Morrison’s Pulitzer Prize-winning novel tells the story of Sethe, an escaped slave haunted by the ghost of her dead child, as she confronts the trauma of her past. A profound meditation on memory, slavery, and motherhood.'),
+('Beloved', 324, 16.99, '1987-09-02', TRUE, '9781400033416', 'Beloved.jpg', 4.3, 'Alfred A. Knopf', 'Toni Morrison’s Pulitzer Prize-winning novel tells the story of Sethe, an escaped slave haunted by the ghost of her dead child, as she confronts the trauma of her past. A profound meditation on memory, slavery, and motherhood.'),
 ('Do Androids Dream of Electric Sheep?', 210, 14.99, '1968-01-01', TRUE, '9780345404473', 'DoAndroidsDreamOfElectricSheep.jpg', 4.1, 'Doubleday', 'Philip K. Dick’s science fiction classic explores the blurred lines between humans and androids in a dystopian future where a bounty hunter is tasked with "retiring" rogue robots. A chilling examination of humanity.'),
 ('Good Omens', 288, 15.99, '1990-05-01', TRUE, '9780552137030', 'GoodOmens.jpg', 4.5, 'Gollancz', 'A comedic novel by Neil Gaiman and Terry Pratchett, centering on an angel and demon who team up to prevent the apocalypse. Witty, absurd, and full of satire, it’s a fun twist on the end of the world.'),
 ('Dune', 412, 17.99, '1965-08-01', TRUE, '9780441172719', 'Dune.jpg', 4.6, 'Chilton Books', 'Frank Herbert’s epic sci-fi novel set on the desert planet of Arrakis, where politics, religion, and ecology intersect around the valuable spice melange. A story of survival, power, and prophecy in a vast universe.'),
@@ -186,6 +186,13 @@ INSERT INTO formats (type) VALUES
 ('ebook'), 
 ('audiobook'), 
 ('paperback');
+
+INSERT INTO lengths (lengths) VALUES
+('short'),
+('medium'),
+('long'),
+('very_long'),
+('humongous')
 
 -- Link Titles and Authors
 INSERT INTO titles_authors (title_id, author_id) VALUES

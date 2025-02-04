@@ -193,6 +193,13 @@ app.get("/recommended-books", authenticateToken, async (req, res) => {
 
         console.log('Using preferences:', { genres, authors, languages, lengths });
 
+        /*
+        Book search algorithm functionality:
+        1)Begin book search
+        2)Exclude books the user has already liked
+        3)Calculate book score through weighted combinationsGenre: 35%; Author: 25%; Language: 20%; Page count: 20%
+        4)Sort by score in descending order and limit results to 10
+        */
         const recommendationQuery = `
         WITH book_scores AS (
             SELECT

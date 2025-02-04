@@ -153,7 +153,14 @@ CREATE TABLE liked_titles (
   CONSTRAINT fk_user_liked_title FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
   CONSTRAINT fk_liked_title FOREIGN KEY (title_id) REFERENCES titles (id) ON DELETE CASCADE
 );
-
+ 
+CREATE TABLE disliked_titles (
+    user_id INTEGER REFERENCES users(id),
+    title_id INTEGER REFERENCES titles(id),
+    disliked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, title_id)
+);
+ 
 -- Comments
 COMMENT ON COLUMN titles.ISBN IS 'Max 13 characters for ISBN.';
 
