@@ -139,4 +139,6 @@ Common issues and solutions:
 This project is licensed under the MIT License - see the LICENSE file for details
 
 ## Screenshots
-[Add screenshots/GIF demo of the app here]
+![Media](https://github.com/user-attachments/assets/d239b0ed-8205-42d7-91a9-ca50e6b04e4f)![Media (1)](https://github.com/user-attachments/assets/f58cff21-1bfa-4fed-a1ca-ceb05c29d736)
+
+
