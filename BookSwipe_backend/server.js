@@ -455,27 +455,14 @@ app.get("/available-preferences", async (req, res) => {
                                          db.query('SELECT COUNT(*) FROM authors')
         ]);
 
-        // console.log("Table counts:", {
-        //     genres: counts[0].rows[0].count,
-        //     languages: counts[1].rows[0].count,
-        //     lengths: counts[2].rows[0].count,
-        //     authors: counts[3].rows[0].count
-        // });
 
         const [genres, languages, lengths, authors] = await Promise.all([
             db.query('SELECT name FROM genres ORDER BY name'),
-                                                                        db.query('SELECT name FROM languages ORDER BY name'),
-                                                                        db.query('SELECT length FROM lengths ORDER BY length'),
-                                                                        db.query('SELECT CONCAT(au_fname, \' \', au_lname) as name FROM authors ORDER BY au_lname')
+            db.query('SELECT name FROM languages ORDER BY name'),
+            db.query('SELECT length FROM lengths ORDER BY length'),
+            db.query('SELECT CONCAT(au_fname, \' \', au_lname) as name FROM authors ORDER BY au_lname')
         ]);
-
-        // console.log("Query results:", {
-        //     genres: genres.rows,
-        //     languages: languages.rows,
-        //     lengths: lengths.rows,
-        //     authors: authors.rows
-        // });
-
+        
         res.json({
             success: true,
             preferences: {
