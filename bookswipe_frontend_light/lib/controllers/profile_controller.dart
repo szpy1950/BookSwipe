@@ -1,5 +1,4 @@
 // lib/controllers/profile_controller.dart
-import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 
 class ProfileController {
@@ -18,20 +17,6 @@ class ProfileController {
       preferences['Languages'] = Set<String>.from(prefsData['Languages'] ?? []);
       preferences['Book Length'] = Set<String>.from(prefsData['Book Length'] ?? []);
       preferences['Formats'] = Set<String>.from(prefsData['Formats'] ?? []);
-    }
-
-    // Provide defaults that match your database enum types
-    if (!preferences.containsKey('Genres')) {
-      preferences['Genres'] = {'Fiction'};
-    }
-    if (!preferences.containsKey('Languages')) {
-      preferences['Languages'] = {'English'};
-    }
-    if (!preferences.containsKey('Book Length')) {
-      preferences['Book Length'] = {'medium'};  // Match your enum
-    }
-    if (!preferences.containsKey('Formats')) { // Add this block
-      preferences['Formats'] = {'Paperback'};
     }
 
     return preferences;

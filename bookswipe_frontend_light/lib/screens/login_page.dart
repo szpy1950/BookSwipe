@@ -3,6 +3,7 @@ import '../controllers/auth_controller.dart';
 import '../widgets/login_form.dart';  // New widget we'll create
 import '../widgets/loading_button.dart';  // New reusable widget
 
+// Screen that handles user login with username/password form
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -17,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
   bool _isLoading = false;
 
+  // Handles login form submission and navigation on success
   Future<void> _handleLogin() async {
     if (!_formKey.currentState!.validate()) {
       return;
@@ -41,12 +43,14 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  // Displays error message to user using a snackbar
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(message)),
     );
   }
 
+  // Cleanup controllers when widget is disposed ( typically when leaving a page )
   @override
   void dispose() {
     _usernameController.dispose();

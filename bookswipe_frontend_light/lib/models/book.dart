@@ -1,3 +1,5 @@
+
+// Model class representing a book with its metadata and availability information
 class Book {
   final int id;
   final String title;
@@ -15,6 +17,7 @@ class Book {
   final bool isAvailable;
   final String length;
 
+  // Creates a new Book instance with required fields
   Book({
     required this.id,
     required this.title,
@@ -33,9 +36,10 @@ class Book {
     required this.length,
   });
 
+  // Creates a Book instance from JSON data with fallback values if parsing fails
   factory Book.fromJson(Map<String, dynamic> json) {
-
     try {
+      // Determines book length category based on page count
       String calculateLength(int pages) {
         if (pages < 100) return 'short';
         if (pages < 300) return 'medium';
@@ -84,14 +88,14 @@ class Book {
     }
   }
 
-  // Helper method to parse lists safely
+  // Safely converts dynamic list to List<String> with empty list fallback
   static List<String> _parseList(dynamic value) {
     if (value == null) return [];
     if (value is List) return value.map((e) => e.toString()).toList();
     return [];
   }
 
-  // Helper method to parse doubles safely
+  // Safely converts dynamic value to double with null fallback
   static double? _parseDouble(dynamic value) {
     if (value == null) return null;
     if (value is num) return value.toDouble();
@@ -105,7 +109,7 @@ class Book {
     return null;
   }
 
-  // Helper method to parse dates safely
+  // Safely parses date string to DateTime with current date fallback
   static DateTime _parseDate(dynamic value) {
     if (value == null) return DateTime.now();
     try {

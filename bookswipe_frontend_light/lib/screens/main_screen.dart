@@ -3,6 +3,7 @@ import '../controllers/auth_controller.dart';
 import 'book_swipe_page.dart';
 import 'profile_page.dart';
 
+// Main screen shown after login - contains bottom navigation between book swipe and profile views
 class MainScreen extends StatefulWidget {
   final Map<String, dynamic> userData;
 
@@ -21,6 +22,7 @@ class _MainScreenState extends State<MainScreen> {
 
   late final List<Widget> _pages;
 
+  // Initialize pages array with book swipe and profile pages
   @override
   void initState() {
     super.initState();
@@ -29,13 +31,14 @@ class _MainScreenState extends State<MainScreen> {
       ProfilePage(userData: widget.userData),
     ];
   }
-
+  // Updates selected tab index when user taps bottom navigation
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
+  // Shows logout confirmation dialog and handles logout if confirmed
   void _handleLogout(BuildContext context) {
     showDialog(
       context: context,
@@ -61,6 +64,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  // Builds main screen with app bar, bottom navigation and current page content
   @override
   Widget build(BuildContext context) {
     return Scaffold(

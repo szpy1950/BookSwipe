@@ -9,6 +9,7 @@ class AuthController {
   final ApiService _api = ApiService();
   final AuthService _auth = AuthService();
 
+  // login method that takes username and passwords
   Future<Map<String, dynamic>> login(String username, String password) async {
     try {
       final response = await _api.login(username, password);
@@ -23,6 +24,7 @@ class AuthController {
     }
   }
 
+  // logout method
   Future<void> logout(BuildContext context) async {
     try {
       await _auth.deleteToken();  // Clear stored token
@@ -39,6 +41,7 @@ class AuthController {
     }
   }
 
+  // check if there is already a valid authentication token stored from a previous session
   Future<bool> checkAuth(BuildContext context) async {
     final token = await _auth.getToken();
     if (token != null) {
@@ -53,9 +56,15 @@ class AuthController {
         return true;
       }
     }
+
+    // Return false if:
+    // - No token found
+    // - Token was invalid
+    // - Failed to get user data
     return false;
   }
 
+  // create a new account
   Future<Map<String, dynamic>> signup(String username, String password) async {
     try {
       final response = await _api.signup(username, password);
@@ -69,6 +78,7 @@ class AuthController {
     }
   }
 
+  // going to main mage
   Future<void> loginAndNavigate({
     required BuildContext context,
     required String username,
