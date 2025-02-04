@@ -58,24 +58,28 @@ node server.js
 ## Project Structure
 ```
 lib/
-├── controllers/    # Business logic
-│   ├── auth_controller.dart
-│   ├── book_controller.dart
-│   └── preference_controller.dart
-├── models/         # Data models
-│   ├── book.dart
-│   ├── user.dart
-│   └── preference.dart
-├── screens/        # UI screens
-│   ├── login_screen.dart
-│   ├── home_screen.dart
-│   └── detail_screen.dart
-├── services/       # API and auth services
-│   ├── api_service.dart
-│   └── auth_service.dart
-└── widgets/        # Reusable widgets
-    ├── book_card.dart
-    └── swipe_card.dart
+├── controllers/
+│   ├── auth_controller.dart
+│   ├── book_controller.dart
+│   ├── landing_controller.dart
+│   └── profile_controller.dart
+├── main.dart
+├── models/
+│   └── book.dart
+├── screens
+│   ├── book_swipe_page.dart
+│   ├── landing_page.dart
+│   ├── login_page.dart
+│   ├── main_screen.dart
+│   ├── profile_page.dart
+│   └── signup_page.dart
+├── services
+│   ├── api_service.dart
+│   ├── auth_service.dart
+│   └── token_storage.dart
+└── widgets
+    ├── loading_button.dart
+    └── login_form.dart
 ```
 
 ## Features
