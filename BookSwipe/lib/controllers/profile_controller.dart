@@ -76,41 +76,4 @@ class ProfileController {
     return preferences;
   }
 
-  // Get recommendation score
-  double calculateRecommendationScore(Map<String, dynamic> book, Map<String, Set<String>> preferences) {
-    double score = 0.0;
-
-    // Genre match (30%)
-    final genreMatch = preferences['Genres']!.intersection(
-        Set<String>.from(book['genres'] as List)
-    ).length;
-    score += (genreMatch / preferences['Genres']!.length) * 0.4;
-
-    // Language match (20%)
-    if (preferences['Languages']!.contains(book['language'])) {
-      score += 0.2;
-    }
-
-    // Length preference (20%)
-    final pages = book['pages'] as int;
-    final lengthPref = preferences['Book Length']!.first;
-    if ((lengthPref.contains('Short') && pages < 200) ||
-        (lengthPref.contains('Medium') && pages >= 200 && pages <= 400) ||
-        (lengthPref.contains('Long') && pages > 400)) {
-      score += 0.2;
-    }
-
-    // // Reading level (20%)
-    // if (preferences['Reading Level']!.contains(book['reading_level'])) {
-    //   score += 0.2;
-    // }
-
-    // Format match (30%)
-    final formatMatch = preferences['Formats']!.intersection(
-    Set<String>.from(book['formats'] as List)
-    ).length;
-    score += (formatMatch / preferences['Formats']!.length) * 0.3;
-
-    return score;
-  }
 }
