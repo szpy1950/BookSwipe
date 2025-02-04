@@ -1,5 +1,3 @@
-Here's the formatted version ready to copy-paste into your README.md file:
-
 # BookSwipe - A Book Discovery App
 A Flutter application that helps users discover books through a Tinder-like swiping interface. Users can create accounts, swipe through books, and save their preferences.
 
