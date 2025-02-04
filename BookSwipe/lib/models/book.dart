@@ -35,7 +35,6 @@ class Book {
 
   factory Book.fromJson(Map<String, dynamic> json) {
 
-
     try {
       String calculateLength(int pages) {
         if (pages < 100) return 'short';
@@ -44,7 +43,6 @@ class Book {
         if (pages < 800) return 'very_long';
         return 'humongous';
       }
-
 
       return Book(
         id: json['id'] ?? 0,
