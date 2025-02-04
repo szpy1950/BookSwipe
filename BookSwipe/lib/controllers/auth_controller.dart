@@ -1,88 +1,79 @@
-// lib/controllers/auth_controller.dart
+// lib/controllers/profile_controller.dart
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
-import '../services/auth_service.dart';
-import '../screens/main_screen.dart';
-import '../screens/landing_page.dart';
 
-class AuthController {
+class ProfileController {
   final ApiService _api = ApiService();
-  final AuthService _auth = AuthService();
 
-  Future<Map<String, dynamic>> login(String username, String password) async {
-    try {
-      final response = await _api.login(username, password);
-      if (response['success']) {
-        await _auth.saveToken(response['token']);
-        return response;
-      } else {
-        throw Exception(response['message'] ?? 'Login failed');
-      }
-    } catch (e) {
-      throw Exception('Login error: $e');
+  // Fetch user preferences from server
+  Future<Map<String, Set<String>>> fetchUserPreferences(int userId) async {
+    final response = await _api.getUserPreferences(userId);
+    final preferences = <String, Set<String>>{};
+
+    if (response['success'] == true && response['preferences'] != null) {
+      final prefsData = response['preferences'] as Map<String, dynamic>;
+
+      // Match server's response structure
+      preferences['Genres'] = Set<String>.from(prefsData['Genres'] ?? []);
+      preferences['Languages'] = Set<String>.from(prefsData['Languages'] ?? []);
+      preferences['Book Length'] = Set<String>.from(prefsData['Book Length'] ?? []);
+      preferences['Formats'] = Set<String>.from(prefsData['Formats'] ?? []);
     }
+
+    // Provide defaults that match your database enum types
+    if (!preferences.containsKey('Genres')) {
+      preferences['Genres'] = {'Fiction'};
+    }
+    if (!preferences.containsKey('Languages')) {
+      preferences['Languages'] = {'English'};
+    }
+    if (!preferences.containsKey('Book Length')) {
+      preferences['Book Length'] = {'medium'};  // Match your enum
+    }
+    if (!preferences.containsKey('Formats')) { // Add this block
+      preferences['Formats'] = {'Paperback'};
+    }
+
+    return preferences;
   }
 
-  Future<void> logout(BuildContext context) async {
-    try {
-      await _auth.deleteToken();  // Clear stored token
-      if (context.mounted) {
-        // Navigate back to landing page
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const LandingPage()),
-              (route) => false,
-        );
-      }
-    } catch (e) {
-      print('Error during logout: $e');
-    }
-  }
-
-  Future<bool> checkAuth(BuildContext context) async {
-    final token = await _auth.getToken();
-    if (token != null) {
-      final userData = await _auth.verifyToken(token);
-      if (userData != null && context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MainScreen(userData: userData),
-          ),
-        );
-        return true;
-      }
-    }
-    return false;
-  }
-
-  Future<Map<String, dynamic>> signup(String username, String password) async {
-    try {
-      final response = await _api.signup(username, password);
-      if (response['success']) {
-        return response;
-      } else {
-        throw Exception(response['message'] ?? 'Signup failed');
-      }
-    } catch (e) {
-      throw Exception('Signup error: $e');
-    }
-  }
-
-  Future<void> loginAndNavigate({
-    required BuildContext context,
-    required String username,
-    required String password,
+  // Update preferences on server
+  Future<Map<String, List<String>>> updatePreferences({
+    required int userId,
+    required Map<String, List<String>> preferences,
   }) async {
-    final result = await login(username, password);
+    final response = await _api.updateUserPreferences(
+      userId: userId,
+      preferences: preferences,
+    );
 
-    if (context.mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MainScreen(userData: result['user']),
-        ),
-      );
+    if (response['success'] == true) {
+      return preferences;
+    } else {
+      throw Exception(response['message'] ?? 'Failed to update preferences');
     }
   }
+
+  Future<List<Map<String, dynamic>>> getUserLikedBooks(int userId) async {
+    try {
+      return await _api.getUserLikedBooks(userId);
+    } catch (e) {
+      print('Error in ProfileController.getUserLikedBooks: $e');
+      return [];
+    }
+  }
+
+  Future<Map<String, List<String>>> fetchAvailablePreferences() async {
+    final response = await _api.getAvailablePreferences();
+    final preferences = <String, List<String>>{};
+
+    if (response['success'] == true && response['preferences'] != null) {
+      final prefsData = response['preferences'] as Map<String, dynamic>;
+      preferences.addAll(prefsData.map((key, value) =>
+          MapEntry(key, List<String>.from(value as List))));
+    }
+
+    return preferences;
+  }
+
 }
