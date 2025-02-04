@@ -187,6 +187,13 @@ INSERT INTO formats (type) VALUES
 ('audiobook'), 
 ('paperback');
 
+INSERT INTO lengths (lengths) VALUES
+('short'),
+('medium'),
+('long'),
+('very_long'),
+('humongous')
+
 -- Link Titles and Authors
 INSERT INTO titles_authors (title_id, author_id) VALUES
 (1, 1), -- The Shining by Stephen King
