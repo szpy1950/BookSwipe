@@ -6,12 +6,6 @@ import 'token_storage.dart';
 
 class AuthService {
   final _storage = TokenStorage();
-  late final ApiService _api;
-
-  // Method to set the API service after construction
-  void setApiService(ApiService api) {
-    _api = api;
-  }
 
   Future<void> saveToken(String token) async {
     await _storage.saveToken(token);

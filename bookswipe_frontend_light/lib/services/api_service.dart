@@ -181,14 +181,10 @@ class ApiService {
   Future<List<Book>> fetchRecommendedBooks() async {
     try {
       final headers = await _getAuthHeaders();
-      print('Auth headers: $headers'); // DEBUGGING
       final response = await http.get(
         Uri.parse('$baseUrl/recommended-books'),
         headers: headers,
       );
-
-      print('Response status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);

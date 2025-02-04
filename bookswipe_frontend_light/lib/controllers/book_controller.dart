@@ -14,7 +14,6 @@ class BookController {
 
   // Getter methods to access current books and selected book
   List<Book> get books => _books;
-  int get currentIndex => _currentIndex;
   Book? get currentBook => _books.isNotEmpty ? _books[_currentIndex] : null;
 
   // Fetches recommended books, falls back to regular books if none found
@@ -57,12 +56,6 @@ class BookController {
         await _api.likeBook(currentBook!.id, userId);
         print('Successfully liked book');
 
-        // Move to next book or fetch new ones
-        // if (_currentIndex < _books.length - 1) {
-        //   _currentIndex++;
-        // } else {
-        //   await fetchBooks();
-        // }
         await fetchBooks();
       } catch (e) {
         print('Error liking book: $e');
@@ -77,11 +70,6 @@ class BookController {
       try {
         await _api.dislikeBook(currentBook!.id, userId);
 
-        // if (_currentIndex < _books.length - 1) {
-        //   _currentIndex++;
-        // } else {
-        //   await fetchBooks();
-        // }
         await fetchBooks();
       } catch (e) {
         print('Error disliking book: $e');
