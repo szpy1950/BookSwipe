@@ -60,10 +60,20 @@ class BookController {
   }
 
   Future<void> handleDislike() async {
-    if (_currentIndex < _books.length - 1) {
-      _currentIndex++;
-    } else {
-      await fetchBooks();
+    if (currentBook != null) {
+      try {
+        await _api.dislikeBook(currentBook!.id, userId);
+
+        if (_currentIndex < _books.length - 1) {
+          _currentIndex++;
+        } else {
+          await fetchBooks();
+        }
+      } catch (e) {
+        print('Error disliking book: $e');
+        throw Exception('Failed to dislike book: $e');
+      }
     }
   }
+
 }
