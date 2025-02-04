@@ -23,6 +23,12 @@ class BookController {
       // Always try to get recommended books first
       _books = await _api.fetchRecommendedBooks();
 
+      if (_books.isNotEmpty) {
+        print('First recommended book details:');
+        print('Title: ${_books[0].title}');
+        print('Description: ${_books[0].description}');
+      }
+
       // Only fall back to regular books if recommendations are empty
       if (_books.isEmpty) {
         print('No recommendations found, falling back to regular books');
@@ -52,11 +58,12 @@ class BookController {
         print('Successfully liked book');
 
         // Move to next book or fetch new ones
-        if (_currentIndex < _books.length - 1) {
-          _currentIndex++;
-        } else {
-          await fetchBooks();
-        }
+        // if (_currentIndex < _books.length - 1) {
+        //   _currentIndex++;
+        // } else {
+        //   await fetchBooks();
+        // }
+        await fetchBooks();
       } catch (e) {
         print('Error liking book: $e');
         throw Exception('Failed to like book: $e');
@@ -70,15 +77,17 @@ class BookController {
       try {
         await _api.dislikeBook(currentBook!.id, userId);
 
-        if (_currentIndex < _books.length - 1) {
-          _currentIndex++;
-        } else {
-          await fetchBooks();
-        }
+        // if (_currentIndex < _books.length - 1) {
+        //   _currentIndex++;
+        // } else {
+        //   await fetchBooks();
+        // }
+        await fetchBooks();
       } catch (e) {
         print('Error disliking book: $e');
         throw Exception('Failed to dislike book: $e');
       }
     }
   }
+
 }
