@@ -89,8 +89,6 @@ lib/
 - Like/Dislike functionality
 - User preference management
 - Reading history tracking
-- Offline mode support
-- Dark/Light theme toggle
 - Reading list management
 
 ## Architecture
