@@ -6,7 +6,7 @@ import 'auth_service.dart';
 import 'token_storage.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.102:8080';
+  static const String baseUrl = 'http://192.168.153.159:8080';
   final _storage = TokenStorage();
 
   static String getImageUrl(String? imageUrl) {

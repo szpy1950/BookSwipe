@@ -6,8 +6,14 @@ import '../screens/main_screen.dart';
 import '../screens/landing_page.dart';
 
 class AuthController {
-  final ApiService _api = ApiService();
-  final AuthService _auth = AuthService();
+  final ApiService _api;
+  final AuthService _auth;
+
+  AuthController({
+    ApiService? apiService,
+    AuthService? authService
+  }) : _api = apiService ?? ApiService(),
+        _auth = authService ?? AuthService();
 
   // login method that takes username and passwords
   Future<Map<String, dynamic>> login(String username, String password) async {

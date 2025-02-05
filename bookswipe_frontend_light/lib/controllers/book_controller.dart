@@ -9,7 +9,7 @@ class BookController {
   List<Book> _books = [];
   int _currentIndex = 0;
 
-  // Creates controller instance with user ID for tracking preferences
+  // // Creates controller instance with user ID for tracking preferences
   BookController({required this.userId});
 
   // Getter methods to access current books and selected book
